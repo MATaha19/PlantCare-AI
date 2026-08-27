@@ -16,7 +16,9 @@ __pycache__/
 
 # Datasets and archives
 PlantVillage/
-data/
+data/*
+!data/
+!data/treatment_recommendations.py
 validator_dataset/
 validator_split/
 *.zip
