@@ -1,0 +1,60 @@
+# Python virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datasets and archives
+PlantVillage/
+data/
+validator_dataset/
+validator_split/
+*.zip
+*.7z
+*.rar
+
+# Large metadata/training files
+plantnet300K_metadata.csv
+species_metadata.csv
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated/test files
+test_videos/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# Model files - review before uploading
+*.h5
+*.keras
+*.pt
+*.pth
+*.onnx
+
+# Build/dependency folders
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
