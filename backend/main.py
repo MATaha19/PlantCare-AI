@@ -233,25 +233,46 @@ PLANT_CLASS_MAPPING = {
 
 
 # ============================================================
-# MODEL
+# TFLITE DISEASE MODEL
 # ============================================================
 
 MODEL_PATH = os.path.join(
     BASE_DIR,
     "models",
-    "plant_disease_model.keras"
+    "plant_disease_model.tflite"
 )
 
 print(
-    "Loading PlantCare AI disease model..."
+    "Loading PlantCare AI disease model (TFLite)..."
 )
 
-model = tf.keras.models.load_model(
-    MODEL_PATH
+disease_interpreter = tf.lite.Interpreter(
+    model_path=MODEL_PATH,
+    num_threads=1
+)
+
+disease_interpreter.allocate_tensors()
+
+disease_input_details = (
+    disease_interpreter.get_input_details()
+)
+
+disease_output_details = (
+    disease_interpreter.get_output_details()
 )
 
 print(
-    "PlantCare AI disease model loaded successfully."
+    "PlantCare AI TFLite disease model loaded successfully."
+)
+
+print(
+    "Disease model input:",
+    disease_input_details[0]["shape"]
+)
+
+print(
+    "Disease model output:",
+    disease_output_details[0]["shape"]
 )
 
 
@@ -629,10 +650,39 @@ def predict_image(image):
         axis=0
     )
 
-    prediction = model.predict(
-        image_array,
-        verbose=0
-    )[0]
+    # --------------------------------------------------------
+    # TFLITE INPUT
+    # --------------------------------------------------------
+
+    input_index = (
+        disease_input_details[0]["index"]
+    )
+
+    output_index = (
+        disease_output_details[0]["index"]
+    )
+
+    disease_interpreter.set_tensor(
+        input_index,
+        image_array
+    )
+
+    disease_interpreter.invoke()
+
+    prediction = (
+        disease_interpreter.get_tensor(
+            output_index
+        )[0]
+    )
+
+    prediction = np.asarray(
+        prediction,
+        dtype=np.float32
+    )
+
+    # --------------------------------------------------------
+    # PREDICTED CLASS
+    # --------------------------------------------------------
 
     predicted_index = int(
         np.argmax(prediction)
