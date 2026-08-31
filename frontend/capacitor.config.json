@@ -1,0 +1,21 @@
+{
+  "appId": "com.plantcareai.app",
+  "appName": "PlantCare-AI",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#064e3b",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#064e3b"
+    }
+  }
+}
