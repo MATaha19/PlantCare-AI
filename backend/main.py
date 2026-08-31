@@ -63,43 +63,42 @@ app = FastAPI(
 # CORS
 # ============================================================
 
-# Configure production origins using:
-#
-# PLANTCARE_ALLOWED_ORIGINS
-#
-# Example:
-#
-# PLANTCARE_ALLOWED_ORIGINS=https://your-frontend.com
-#
-# Multiple origins can be separated by commas.
-#
-# Local development defaults are included so the existing
-# local frontend/API workflow is not unnecessarily broken.
-
-allowed_origins = os.getenv(
-    "PLANTCARE_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,http://localhost:8501"
-).split(",")
-
-allowed_origins = [
-    origin.strip()
-    for origin in allowed_origins
-    if origin.strip()
+# Default allowed origins including Netlify production, Android Capacitor, and local dev
+DEFAULT_ALLOWED_ORIGINS = [
+    "https://taha-plantcare-ai.netlify.app",
+    "https://taha-plantcare-ai.netlify.app/",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:8501",
+    "http://localhost:3000",
+    "capacitor://localhost",
+    "http://localhost",
+    "https://localhost"
 ]
+
+env_origins = os.getenv("PLANTCARE_ALLOWED_ORIGINS", "")
+if env_origins:
+    allowed_origins = [
+        origin.strip()
+        for origin in env_origins.split(",")
+        if origin.strip()
+    ]
+    for def_origin in DEFAULT_ALLOWED_ORIGINS:
+        if def_origin not in allowed_origins:
+            allowed_origins.append(def_origin)
+else:
+    allowed_origins = DEFAULT_ALLOWED_ORIGINS
 
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.netlify\.app",
     allow_credentials=True,
-    allow_methods=[
-        "GET",
-        "POST"
-    ],
-    allow_headers=[
-        "Content-Type",
-        "Authorization"
-    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
